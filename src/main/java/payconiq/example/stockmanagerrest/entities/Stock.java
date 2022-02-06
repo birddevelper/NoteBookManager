@@ -30,7 +30,7 @@ public class Stock extends RepresentationModel<Stock> {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // id generate by the database native approach
     public Integer getID() {
         return ID;
     }

@@ -14,10 +14,12 @@ import org.springframework.hateoas.server.ExposesResourceFor;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 import payconiq.example.stockmanagerrest.entities.Stock;
 import payconiq.example.stockmanagerrest.services.StockService;
 
+import java.security.InvalidParameterException;
 import java.util.List;
 
 @RestController
@@ -33,11 +35,13 @@ public class StockController {
 
 
     // GET /api/stocks (get a list of stocks)
-    @Operation(summary = "Get list of stocks")
+    @Operation(summary = "Get list of stocks (Ordered by Id in ascending order), you must specify page number and page size")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful Operation",
                     content = { @Content(mediaType = "application/json") }),
             @ApiResponse(responseCode = "400", description = "Invalid parameters supplied",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error",
                     content = @Content)})
     @GetMapping(produces = { "application/json" })
     public ResponseEntity<CollectionModel<Stock>> getStocks(@Parameter(description = "Page index (start from 0)") @RequestParam(value = "page") Integer page,@Parameter(description = "Number of records per page") @RequestParam(value = "pageSize") Integer pageSize) {
@@ -70,6 +74,8 @@ public class StockController {
             @ApiResponse(responseCode = "400", description = "Invalid id supplied",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "Stock not found",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error",
                     content = @Content) })
     @GetMapping(value = "/{stockId}", produces = { "application/json" })
     public ResponseEntity<EntityModel<Stock>> getStockById(@Parameter(description = "id of stock to be retrieved")  @PathVariable int stockId){
@@ -100,6 +106,8 @@ public class StockController {
             @ApiResponse(responseCode = "400", description = "Invalid id supplied",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "Stock not found",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error",
                     content = @Content) })
     @PostMapping
     public ResponseEntity<EntityModel<Stock>> createStock(@RequestBody Stock stock){
@@ -130,6 +138,8 @@ public class StockController {
             @ApiResponse(responseCode = "400", description = "Invalid id supplied",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "Stock not found",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error",
                     content = @Content) })
     @PatchMapping(value = "/{stockId}", produces = { "application/json" })
     public ResponseEntity<EntityModel<Stock>> updateStock(@Parameter(description = "id of stock to be updated")  @PathVariable int stockId,@Parameter(description = "stock updated information")  @RequestBody Stock stock){
@@ -159,6 +169,8 @@ public class StockController {
             @ApiResponse(responseCode = "400", description = "Invalid id supplied",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "Stock not found",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error",
                     content = @Content) })
     @DeleteMapping(value = "/{stockId}")
     public ResponseEntity<EntityModel<Stock>> deleteStock(@Parameter(description = "id of stock to be deleted")  @PathVariable int stockId){
@@ -170,6 +182,23 @@ public class StockController {
         else
             // If no stock is found send 404 status code as response
             return new ResponseEntity(null, HttpStatus.NOT_FOUND);
+    }
+
+
+
+
+        // Handling exceptions related to user input
+        @ExceptionHandler({ MissingServletRequestParameterException.class, InvalidParameterException.class })
+        public ResponseEntity<String> handleUserInputException() {
+
+            return new ResponseEntity("Bad Request", HttpStatus.BAD_REQUEST);
+        }
+
+    // Handling runtime exception
+    @ExceptionHandler({ RuntimeException.class })
+    public ResponseEntity<String> handleRuntimeException() {
+
+        return new ResponseEntity("Bad Request", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
