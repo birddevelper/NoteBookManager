@@ -1,0 +1,33 @@
+version: '3.0'
+
+services:
+    #service 1: mysql database image creation
+    db:
+      image: mysql:5.6.17
+      container_name: mysql-db  
+      environment:
+        - MYSQL_ROOT_PASSWORD=spring
+      ports:
+        - "3306:3306"
+      restart: always
+
+      
+    
+    
+    # service 2: Stock Manager app image creation
+    stockservice:
+      image: stock-service
+      container_name: stock-service-app     # name of container created from image
+      build:
+        context: .                          # path to docker file
+        dockerfile: Dockerfile              # docker file name
+      ports:
+        - "8090:8080"                       # stock service port
+      restart: always
+        
+      depends_on:                           #define dependencies of this app
+        - db                                #dependency name (which is defined with this name 'db' in this file earlier)
+      environment:
+        SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/stock_manager?createDatabaseIfNotExist=true&useSSL=false
+        SPRING_DATASOURCE_USERNAME: root
+        SPRING_DATASOURCE_PASSWORD: spring
