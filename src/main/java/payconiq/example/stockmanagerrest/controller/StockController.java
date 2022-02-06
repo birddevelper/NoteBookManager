@@ -40,7 +40,7 @@ public class StockController {
             @ApiResponse(responseCode = "400", description = "Invalid parameters supplied",
                     content = @Content)})
     @GetMapping(produces = { "application/json" })
-    public ResponseEntity<CollectionModel<Stock>> getStocks(@RequestParam(value = "page") Integer page, @RequestParam(value = "pageSize") Integer pageSize) {
+    public ResponseEntity<CollectionModel<Stock>> getStocks(@Parameter(description = "Page index (start from 0)") @RequestParam(value = "page") Integer page,@Parameter(description = "Number of records per page") @RequestParam(value = "pageSize") Integer pageSize) {
 
         // Retrieve requested portion of stocks from database
         List<Stock> stockList = stockService.listStocks(page,pageSize);
