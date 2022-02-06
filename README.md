@@ -1,0 +1,2 @@
+# StockManagerRest
+Assignment by Payconiq
