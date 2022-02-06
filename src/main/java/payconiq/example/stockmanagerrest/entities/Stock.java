@@ -40,7 +40,7 @@ public class Stock extends RepresentationModel<Stock> {
     }
 
     @Basic
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     public String getName() {
         return name;
     }
