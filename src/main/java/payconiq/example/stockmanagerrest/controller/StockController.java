@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.hateoas.*;
 import org.springframework.hateoas.server.EntityLinks;
 import org.springframework.hateoas.server.ExposesResourceFor;
@@ -108,6 +109,8 @@ public class StockController {
             @ApiResponse(responseCode = "404", description = "Stock not found",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error",
+                    content = @Content),
+            @ApiResponse(responseCode = "409", description = "Duplicate stock name",
                     content = @Content) })
     @PostMapping
     public ResponseEntity<EntityModel<Stock>> createStock(@RequestBody Stock stock){
@@ -140,6 +143,8 @@ public class StockController {
             @ApiResponse(responseCode = "404", description = "Stock not found",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error",
+                    content = @Content),
+            @ApiResponse(responseCode = "409", description = "Duplicate stock name",
                     content = @Content) })
     @PatchMapping(value = "/{stockId}", produces = { "application/json" })
     public ResponseEntity<EntityModel<Stock>> updateStock(@Parameter(description = "id of stock to be updated")  @PathVariable int stockId,@Parameter(description = "stock updated information")  @RequestBody Stock stock){
@@ -198,7 +203,14 @@ public class StockController {
     @ExceptionHandler({ RuntimeException.class })
     public ResponseEntity<String> handleRuntimeException() {
 
-        return new ResponseEntity("Bad Request", HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+
+
+    @ExceptionHandler({ DataIntegrityViolationException.class })
+    public ResponseEntity<String> handleDuplicateException() {
+
+        return new ResponseEntity(null, HttpStatus.CONFLICT);
+    }
 }
