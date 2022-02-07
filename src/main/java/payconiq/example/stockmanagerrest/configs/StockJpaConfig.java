@@ -40,4 +40,8 @@ public class StockJpaConfig {
     }
 
 
+
+
+
+
 }
