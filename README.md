@@ -14,7 +14,7 @@ It exposes 5 endpoint as following list :
 - DELETE /api/stocks/1 (delete a single stock)
 
 ## How to setup
-It is docker based application. Running below command in project's directory builds 2 containers, StockService and Mysql Containers :
+It is docker based application. Running below command in project's directory builds 2 containers, StockService and Mysql containers with initial records:
 
 ```bash
 docker-compose up
@@ -29,3 +29,6 @@ This application is Restful and it follows OpenAPI specification in API document
 
 
 
+## Test
+
+Tests are written with H2 in-memory database with initial records.
