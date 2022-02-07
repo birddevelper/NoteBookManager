@@ -8,17 +8,19 @@ import org.springframework.context.annotation.Configuration;
 import payconiq.example.stockmanagerrest.entities.Stock;
 import payconiq.example.stockmanagerrest.repositories.StockRepository;
 
+
 @Configuration
-class InitiateDatabaseRecords {
+class InitiateDatabaseRecords  {
 
     private static final Logger log = LoggerFactory.getLogger(InitiateDatabaseRecords.class);
 
 
-    @Bean
+   @Bean
     CommandLineRunner initDatabase(StockRepository repository) {
         if(repository.findAll().size()<1) {
             return args -> {
                 try {
+                    // insert initial records into DB
                     repository.save(new Stock("Asus Vivo Book S", 211.9));
                     repository.save(new Stock("HP Inspiron", 299.9));
                     repository.save(new Stock("Dell Magic", 300));
@@ -37,4 +39,8 @@ class InitiateDatabaseRecords {
                 log.info("Records already initiated ");
             };
     }
+
+
+
+
 }
