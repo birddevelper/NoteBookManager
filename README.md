@@ -25,7 +25,7 @@ docker-compose up
 This application is Restful and it follows OpenAPI specification in API documentation. Thanks to SwaggerUI, you can see endpoints documentation in a graphical user interface and try their functionality and see the response. After running the containers, you can access the application links as :
 
 - Application Rest services : http://localhost:8090/api/stocks
-- SwaggerUI : http://localhost:8090/swagger-ui/
+- SwaggerUI : http://localhost:8090/swagger-ui.html
 
 
 
