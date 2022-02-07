@@ -155,6 +155,20 @@ class StockControllerTest {
     }
 
     @Test
+    void createStockWithDuplicateName() throws Exception{
+
+        Stock stock = new  Stock("Dell B3",305.99);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(stock);
+
+        // Create new stock with duplicate name
+        mockMvc.perform(post("/api/stocks").content(json).characterEncoding("utf-8")
+                        .contentType("application/json"))
+                        .andExpect(status().isConflict());
+
+    }
+
+    @Test
     void deleteStockWithExistingStockId() throws Exception{
 
         // Delete stock with id = 2
