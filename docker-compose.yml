@@ -11,7 +11,17 @@ services:
         - "3306:3306"
       restart: always
 
-      
+  #service 2: definition of phpMyAdmin
+    phpmyadmin:
+      image: phpmyadmin/phpmyadmin:latest
+      container_name: my-php-myadmin
+      ports:
+        - "8082:80"
+      restart: always
+
+      depends_on:
+        - db
+
     
     
     # service 2: Stock Manager app image creation
