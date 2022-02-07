@@ -1,4 +1,4 @@
-version: '3.0'
+version: '2.1'
 
 services:
     #service 1: mysql database image creation
@@ -10,6 +10,10 @@ services:
       ports:
         - "3306:3306"
       restart: always
+      healthcheck:
+          test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+          timeout: 20s
+          retries: 10
 
   #service 2: definition of phpMyAdmin
     phpmyadmin:
@@ -20,7 +24,8 @@ services:
       restart: always
 
       depends_on:
-        - db
+        db :
+          condition: service_healthy
 
     
     
@@ -36,7 +41,8 @@ services:
       restart: always
         
       depends_on:                           #define dependencies of this app
-        - db                                #dependency name (which is defined with this name 'db' in this file earlier)
+         db :                              #dependency name (which is defined with this name 'db' in this file earlier)
+           condition: service_healthy
       environment:
         SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/stock_manager?createDatabaseIfNotExist=true&useSSL=false
         SPRING_DATASOURCE_USERNAME: root
