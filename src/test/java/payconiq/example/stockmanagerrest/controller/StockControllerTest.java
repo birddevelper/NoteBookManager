@@ -49,7 +49,7 @@ class StockControllerTest {
     {
 
         // Insert sample records in temporary database
-        stockRepository.deleteAllInBatch();
+        //stockRepository.deleteAllInBatch();
         Stock stock1 = new  Stock(1,"Asus Vivo Book S",211.9);
         Stock stock2 = new  Stock(2,"HP Inspiron",299.9);
         Stock stock3 = new  Stock(3,"Dell B3",399.9);
