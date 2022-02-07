@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import payconiq.example.stockmanagerrest.entities.Stock;
 import payconiq.example.stockmanagerrest.services.StockService;
 
@@ -193,7 +194,7 @@ public class StockController {
 
 
         // Handling exceptions related to user input
-        @ExceptionHandler({ MissingServletRequestParameterException.class, InvalidParameterException.class })
+        @ExceptionHandler({ MissingServletRequestParameterException.class, InvalidParameterException.class, MethodArgumentTypeMismatchException.class })
         public ResponseEntity<String> handleUserInputException() {
 
             return new ResponseEntity("Bad Request", HttpStatus.BAD_REQUEST);
