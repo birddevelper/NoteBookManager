@@ -1,12 +1,12 @@
-package payconiq.example.stockmanagerrest.configs;
+package bdp.sample.notebookmanager.configs;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import payconiq.example.stockmanagerrest.entities.Stock;
-import payconiq.example.stockmanagerrest.repositories.StockRepository;
+import bdp.sample.notebookmanager.entities.NoteBook;
+import bdp.sample.notebookmanager.repositories.NoteBookRepository;
 
 
 @Configuration
@@ -16,17 +16,17 @@ class InitiateDatabaseRecords  {
 
 
    @Bean
-    CommandLineRunner initDatabase(StockRepository repository) {
+    CommandLineRunner initDatabase(NoteBookRepository repository) {
         if(repository.findAll().size()<1) {
             return args -> {
                 try {
                     // insert initial records into DB
-                    repository.save(new Stock("Asus Vivo Book S", 211.9));
-                    repository.save(new Stock("HP Inspiron", 299.9));
-                    repository.save(new Stock("Dell Magic", 300));
-                    repository.save(new Stock("Apple MacBook", 709.9));
-                    repository.save(new Stock("LG D230", 299.9));
-                    repository.save(new Stock("Acer P700", 199.9));
+                    repository.save(new NoteBook("Asus Vivo Book S", 211.9));
+                    repository.save(new NoteBook("HP Inspiron", 299.9));
+                    repository.save(new NoteBook("Dell Magic", 300));
+                    repository.save(new NoteBook("Apple MacBook", 709.9));
+                    repository.save(new NoteBook("LG D230", 299.9));
+                    repository.save(new NoteBook("Acer P700", 199.9));
 
                     log.info("Initial records inserted into database." );
                 } catch (Exception e) {

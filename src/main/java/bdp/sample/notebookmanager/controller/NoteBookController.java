@@ -1,4 +1,4 @@
-package payconiq.example.stockmanagerrest.controller;
+package bdp.sample.notebookmanager.controller;
 
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,22 +18,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import payconiq.example.stockmanagerrest.entities.Stock;
-import payconiq.example.stockmanagerrest.services.StockService;
+import bdp.sample.notebookmanager.entities.NoteBook;
+import bdp.sample.notebookmanager.services.NoteBookService;
 
 import java.security.InvalidParameterException;
 import java.util.List;
 
 @RestController
-@ExposesResourceFor(Stock.class)
+@ExposesResourceFor(NoteBook.class)
 @RequestMapping("/api/stocks")
-public class StockController {
+public class NoteBookController {
 
     @Autowired
     private EntityLinks entityLinks;
 
     @Autowired
-    private StockService stockService;
+    private NoteBookService noteBookService;
 
 
     // GET /api/stocks (get a list of stocks)
@@ -46,20 +46,20 @@ public class StockController {
             @ApiResponse(responseCode = "500", description = "Internal Error",
                     content = @Content)})
     @GetMapping(produces = { "application/json" })
-    public ResponseEntity<CollectionModel<Stock>> getStocks(@Parameter(description = "Page index (start from 0)") @RequestParam(value = "page") Integer page,@Parameter(description = "Number of records per page") @RequestParam(value = "pageSize") Integer pageSize) {
+    public ResponseEntity<CollectionModel<NoteBook>> getStocks(@Parameter(description = "Page index (start from 0)") @RequestParam(value = "page") Integer page, @Parameter(description = "Number of records per page") @RequestParam(value = "pageSize") Integer pageSize) {
 
         // Retrieve requested portion of stocks from database
-        List<Stock> stockList = stockService.listStocks(page,pageSize);
+        List<NoteBook> stockList = noteBookService.listStocks(page,pageSize);
 
         // Add self Link to each record as url for retrieving the record
-        for (Stock stock : stockList) {
-            Link recordSelfLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(StockController.class)
+        for (NoteBook stock : stockList) {
+            Link recordSelfLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(NoteBookController.class)
                     .getStockById(stock.getID())).withSelfRel();
             stock.add(recordSelfLink);
         }
-        CollectionModel<Stock> resources = CollectionModel.of(stockList);
+        CollectionModel<NoteBook> resources = CollectionModel.of(stockList);
         // selfLink to api according to HATEOS
-        Link selfLink = entityLinks.linkToCollectionResource(Stock.class);
+        Link selfLink = entityLinks.linkToCollectionResource(NoteBook.class);
         resources.add(selfLink);
 
         // Send data to client as a response
@@ -72,7 +72,7 @@ public class StockController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found the stock",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Stock.class)) }),
+                            schema = @Schema(implementation = NoteBook.class)) }),
             @ApiResponse(responseCode = "400", description = "Invalid id supplied",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "Stock not found",
@@ -80,15 +80,15 @@ public class StockController {
             @ApiResponse(responseCode = "500", description = "Internal Error",
                     content = @Content) })
     @GetMapping(value = "/{stockId}", produces = { "application/json" })
-    public ResponseEntity<EntityModel<Stock>> getStockById(@Parameter(description = "id of stock to be retrieved")  @PathVariable int stockId){
+    public ResponseEntity<EntityModel<NoteBook>> getStockById(@Parameter(description = "id of stock to be retrieved")  @PathVariable int stockId){
 
         // selfLink to api according to HATEOS
-        Link selfLink = entityLinks.linkToItemResource(Stock.class, stockId);
+        Link selfLink = entityLinks.linkToItemResource(NoteBook.class, stockId);
         // Retrieve requested stock from database
-        Stock stock = stockService.getStockById(stockId);
+        NoteBook stock = noteBookService.getStockById(stockId);
         //Check whether the stock exist or not
         if(stock!=null) {
-            EntityModel<Stock> resource = EntityModel.of(stock);
+            EntityModel<NoteBook> resource = EntityModel.of(stock);
             resource.add(selfLink);
             // Send data to client as a response
             return new ResponseEntity(EntityModel.of(resource),HttpStatus.OK);
@@ -104,7 +104,7 @@ public class StockController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Stock created",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Stock.class)) }),
+                            schema = @Schema(implementation = NoteBook.class)) }),
             @ApiResponse(responseCode = "400", description = "Invalid id supplied",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "Stock not found",
@@ -114,15 +114,15 @@ public class StockController {
             @ApiResponse(responseCode = "409", description = "Duplicate stock name",
                     content = @Content) })
     @PostMapping
-    public ResponseEntity<EntityModel<Stock>> createStock(@RequestBody Stock stock){
+    public ResponseEntity<EntityModel<NoteBook>> createStock(@RequestBody NoteBook stock){
 
         // Create and Save stock in database
-        Stock storedStock = stockService.createStock(stock);
+        NoteBook storedStock = noteBookService.createStock(stock);
 
         // Check whether the stock is saved or not
         if(stock!=null) {
             // selfLink to api that retrieves the stock according to HATEOS
-            Link recordSelfLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(StockController.class)
+            Link recordSelfLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(NoteBookController.class)
                     .getStockById(stock.getID())).withSelfRel();
             stock.add(recordSelfLink);
             // Send created stock with 201 status code to client
@@ -138,7 +138,7 @@ public class StockController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "Stock updated",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Stock.class)) }),
+                            schema = @Schema(implementation = NoteBook.class)) }),
             @ApiResponse(responseCode = "400", description = "Invalid id supplied",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "Stock not found",
@@ -148,15 +148,15 @@ public class StockController {
             @ApiResponse(responseCode = "409", description = "Duplicate stock name",
                     content = @Content) })
     @PatchMapping(value = "/{stockId}", produces = { "application/json" })
-    public ResponseEntity<EntityModel<Stock>> updateStock(@Parameter(description = "id of stock to be updated")  @PathVariable int stockId,@Parameter(description = "stock updated information")  @RequestBody Stock stock){
+    public ResponseEntity<EntityModel<NoteBook>> updateStock(@Parameter(description = "id of stock to be updated")  @PathVariable int stockId, @Parameter(description = "stock updated information")  @RequestBody NoteBook stock){
 
         // Update stock in the database
-        Stock storedStock = stockService.updateStock(stockId,stock);
+        NoteBook storedStock = noteBookService.updateStock(stockId,stock);
 
         // Check whether the stock exist and is updated or not
         if(storedStock!=null) {
             // selfLink to api that retrieves the stock according to HATEOS
-            Link recordSelfLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(StockController.class)
+            Link recordSelfLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(NoteBookController.class)
                     .getStockById(stock.getID())).withSelfRel();
             stock.add(recordSelfLink);
             // Send updated stock with 202 status code to client
@@ -179,10 +179,10 @@ public class StockController {
             @ApiResponse(responseCode = "500", description = "Internal Error",
                     content = @Content) })
     @DeleteMapping(value = "/{stockId}")
-    public ResponseEntity<EntityModel<Stock>> deleteStock(@Parameter(description = "id of stock to be deleted")  @PathVariable int stockId){
+    public ResponseEntity<EntityModel<NoteBook>> deleteStock(@Parameter(description = "id of stock to be deleted")  @PathVariable int stockId){
 
         // Delete the stock by its Id and check for the result
-        if(stockService.deleteStock(stockId))
+        if(noteBookService.deleteStock(stockId))
             // Sent empty response with 202 status code
             return new ResponseEntity(null, HttpStatus.ACCEPTED);
         else

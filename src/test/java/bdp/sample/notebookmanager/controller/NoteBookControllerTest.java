@@ -1,7 +1,9 @@
-package payconiq.example.stockmanagerrest.controller;
+package bdp.sample.notebookmanager.controller;
 
+import bdp.sample.notebookmanager.configs.JpaConfig;
+import bdp.sample.notebookmanager.entities.NoteBook;
+import bdp.sample.notebookmanager.repositories.NoteBookRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +14,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.client.RestTemplate;
-import payconiq.example.stockmanagerrest.StockManagerRestApplicationTests;
-import payconiq.example.stockmanagerrest.configs.StockJpaConfig;
-import payconiq.example.stockmanagerrest.entities.Stock;
-import payconiq.example.stockmanagerrest.repositories.StockRepository;
 
 import javax.annotation.Resource;
 
@@ -26,11 +22,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @WebAppConfiguration("file:src/test/resources")
-@ContextConfiguration( classes = { StockJpaConfig.class }) // loader = AnnotationConfigWebContextLoader.class,
+@ContextConfiguration( classes = { JpaConfig.class }) // loader = AnnotationConfigWebContextLoader.class,
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @AutoConfigureMockMvc
 @AutoConfigureWebClient
-class StockControllerTest {
+class NoteBookControllerTest {
 
 
 
@@ -40,7 +36,7 @@ class StockControllerTest {
 
 
     @Resource
-    private StockRepository stockRepository;
+    private NoteBookRepository noteBookRepository;
 
 
 
@@ -50,30 +46,30 @@ class StockControllerTest {
 
         // Insert sample records in temporary database
         //stockRepository.deleteAllInBatch();
-        Stock stock1 = new  Stock(1,"Asus Vivo Book S",211.9);
-        Stock stock2 = new  Stock(2,"HP Inspiron",299.9);
-        Stock stock3 = new  Stock(3,"Dell B3",399.9);
-        Stock stock4 = new  Stock(4,"Asus Smart Book",400);
-        Stock stock5 = new Stock(5,"Acer Logic",199.9);
-        stockRepository.save(stock1);
-        stockRepository.save(stock2);
-        stockRepository.save(stock3);
-        stockRepository.save(stock4);
-        stockRepository.save(stock5);
+        NoteBook stock1 = new NoteBook(1,"Asus Vivo Book S",211.9);
+        NoteBook stock2 = new NoteBook(2,"HP Inspiron",299.9);
+        NoteBook stock3 = new NoteBook(3,"Dell B3",399.9);
+        NoteBook stock4 = new NoteBook(4,"Asus Smart Book",400);
+        NoteBook stock5 = new NoteBook(5,"Acer Logic",199.9);
+        noteBookRepository.save(stock1);
+        noteBookRepository.save(stock2);
+        noteBookRepository.save(stock3);
+        noteBookRepository.save(stock4);
+        noteBookRepository.save(stock5);
     }
 
     @Test
     void getListOfStocksWithConfigurablePageSize() throws Exception {
         // First page with page size of 2
         mockMvc.perform(get("/api/stocks?page=0&pageSize=2")).andExpect(status().isOk())
-                .andExpect(content().contentType("application/json")).andExpect(jsonPath("$._embedded.stockList[0].id").value("1"))
-                .andExpect(jsonPath("$._embedded.stockList[1].id").value("2"));
+                .andExpect(content().contentType("application/json")).andExpect(jsonPath("$._embedded.noteBookList[0].id").value("1"))
+                .andExpect(jsonPath("$._embedded.noteBookList[1].id").value("2"));
 
         // Second page with page size of 3
         mockMvc.perform(get("/api/stocks?page=1&pageSize=3")).andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$._embedded.stockList[0].id").value("4"))
-                .andExpect(jsonPath("$._embedded.stockList[1].id").value("5"));
+                .andExpect(jsonPath("$._embedded.noteBookList[0].id").value("4"))
+                .andExpect(jsonPath("$._embedded.noteBookList[1].id").value("5"));
 
     }
 
@@ -114,7 +110,7 @@ class StockControllerTest {
     @Test
     void updateStockWithExistingStockId() throws Exception{
 
-        Stock stock = new  Stock(2,"HP FitBook",305.99);
+        NoteBook stock = new NoteBook(2,"HP FitBook",305.99);
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(stock);
         // Update stock with id = 2
@@ -129,7 +125,7 @@ class StockControllerTest {
     @Test
     void updateStockWithNotExistingStockId() throws Exception{
 
-        Stock stock = new  Stock(77,"HP FitBook",305.99);
+        NoteBook stock = new NoteBook(77,"HP FitBook",305.99);
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(stock);
         // Update stock with id = 77 which is not existed
@@ -143,7 +139,7 @@ class StockControllerTest {
     @Test
     void createStock() throws Exception{
 
-        Stock stock = new  Stock("HP FitBook",305.99);
+        NoteBook stock = new NoteBook("HP FitBook",305.99);
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(stock);
 
@@ -157,7 +153,7 @@ class StockControllerTest {
     @Test
     void createStockWithDuplicateName() throws Exception{
 
-        Stock stock = new  Stock("Dell B3",305.99);
+        NoteBook stock = new NoteBook("Dell B3",305.99);
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(stock);
 

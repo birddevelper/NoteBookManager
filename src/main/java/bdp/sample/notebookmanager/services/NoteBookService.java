@@ -1,32 +1,32 @@
-package payconiq.example.stockmanagerrest.services;
+package bdp.sample.notebookmanager.services;
 
 
+import bdp.sample.notebookmanager.repositories.NoteBookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import payconiq.example.stockmanagerrest.entities.Stock;
-import payconiq.example.stockmanagerrest.repositories.StockRepository;
+import bdp.sample.notebookmanager.entities.NoteBook;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class StockService {
+public class NoteBookService {
 
     @Autowired
-    StockRepository stockRepository;
+    NoteBookRepository noteBookRepository;
 
     //This method gets page index and page size and returns records from database accordingly
-    public List<Stock> listStocks(int page, int size){
-        return stockRepository.findAll(PageRequest.of(page, size, Sort.by("ID").ascending())).toList();
+    public List<NoteBook> listStocks(int page, int size){
+        return noteBookRepository.findAll(PageRequest.of(page, size, Sort.by("ID").ascending())).toList();
     }
 
     // This method gets an Id and returns corresponding stock if it exists, otherwise it returns null
-    public Stock getStockById(int stockId){
-        Optional<Stock> stock = stockRepository.findById(stockId);
+    public NoteBook getStockById(int stockId){
+        Optional<NoteBook> stock = noteBookRepository.findById(stockId);
         if (stock.isPresent())
             return stock.get();
         // returns null if the given Id doesn't exist
@@ -34,22 +34,22 @@ public class StockService {
     }
 
     // This method creates given stock object in the database and returns it with its Id
-    public Stock createStock(Stock stock){
+    public NoteBook createStock(NoteBook stock){
 
-        return stockRepository.save(stock);
+        return noteBookRepository.save(stock);
     }
 
     //This method gets a stock object along with its Id, updates the name and currentPrice and returns it back
     //if the stock Id doesn't exist, it returns null
-    public Stock updateStock(int stockId, Stock changedStock){
-        Optional<Stock> stock = stockRepository.findById(stockId);
+    public NoteBook updateStock(int stockId, NoteBook changedStock){
+        Optional<NoteBook> stock = noteBookRepository.findById(stockId);
         //Check if the stock exists
         if (stock.isPresent()) {
-            Stock tempStock= stock.get();
+            NoteBook tempStock= stock.get();
             tempStock.setName(changedStock.getName());
             tempStock.setCurrentPrice(changedStock.getCurrentPrice());
             // Save and return updated stock object
-            return stockRepository.save(tempStock);
+            return noteBookRepository.save(tempStock);
         }
 
         // returns null if the given Id doesn't exist
@@ -59,10 +59,10 @@ public class StockService {
     //This method gets a stock Id and delete the corresponding stock record in databse
     //if the stock Id doesn't exist, it returns null
     public boolean deleteStock(int stockId){
-        Optional<Stock> stock = stockRepository.findById(stockId);
+        Optional<NoteBook> stock = noteBookRepository.findById(stockId);
         //Check if the stock exists
         if (stock.isPresent()) {
-            stockRepository.delete(stock.get());
+            noteBookRepository.delete(stock.get());
             return true;
         }
 

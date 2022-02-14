@@ -1,4 +1,4 @@
-package payconiq.example.stockmanagerrest.entities;
+package bdp.sample.notebookmanager.entities;
 
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.hateoas.RepresentationModel;
@@ -8,22 +8,22 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
-public class Stock extends RepresentationModel<Stock> {
+public class NoteBook extends RepresentationModel<NoteBook> {
     private Integer ID;
     private String name;
     private double currentPrice;
     private Timestamp lastUpdate;
 
-    public Stock(){
+    public NoteBook(){
 
     }
 
-    public Stock(Integer ID, String name, double currentPrice){
+    public NoteBook(Integer ID, String name, double currentPrice){
         this.ID = ID;
         this.name = name;
         this.currentPrice = currentPrice;
     }
-    public Stock( String name, double currentPrice){
+    public NoteBook(String name, double currentPrice){
         this.name = name;
         this.currentPrice = currentPrice;
     }
@@ -75,7 +75,7 @@ public class Stock extends RepresentationModel<Stock> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Stock stock = (Stock) o;
+        NoteBook stock = (NoteBook) o;
         return ID == stock.ID && currentPrice == stock.currentPrice && Objects.equals(name, stock.name) && Objects.equals(lastUpdate, stock.lastUpdate);
     }
 

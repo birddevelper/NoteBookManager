@@ -1,4 +1,4 @@
-package payconiq.example.stockmanagerrest.configs;
+package bdp.sample.notebookmanager.configs;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +14,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 
 @Configuration
-@EnableJpaRepositories(basePackages = "payconiq.example.stockmanagerrest.repositories")//, entityManagerFactoryRef="emf"
+@EnableJpaRepositories(basePackages = "bdp.sample.notebookmanager.repositories")//, entityManagerFactoryRef="emf"
 @PropertySource("application.properties")
-@ComponentScan({"payconiq.example.stockmanagerrest"})
-@EntityScan(basePackages = "payconiq.example.stockmanagerrest")
+@ComponentScan({"bdp.sample.notebookmanager"})
+@EntityScan(basePackages = "bdp.sample.notebookmanager")
 @EnableTransactionManagement
-public class StockJpaConfig {
+public class JpaConfig {
 
     @Autowired
     private Environment env;
