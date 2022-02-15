@@ -15,7 +15,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableJpaRepositories(basePackages = "bdp.sample.notebookmanager.repositories")//, entityManagerFactoryRef="emf"
-@PropertySource("application.properties")
+@PropertySource("classpath:application.properties")
 @ComponentScan({"bdp.sample.notebookmanager"})
 @EntityScan(basePackages = "bdp.sample.notebookmanager")
 @EnableTransactionManagement
