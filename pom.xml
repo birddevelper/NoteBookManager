@@ -8,11 +8,11 @@
         <version>2.6.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>payconiq.example</groupId>
-    <artifactId>StockManagerRest</artifactId>
+    <groupId>bdp.sample</groupId>
+    <artifactId>NoteBookManagerRest</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>StockManagerRest</name>
-    <description>StockManagerRest</description>
+    <name>NoteBookManagerRest</name>
+    <description>NoteBookManagerRest</description>
     <properties>
         <java.version>8</java.version>
     </properties>
