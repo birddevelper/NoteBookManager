@@ -26,7 +26,7 @@ import java.util.List;
 
 @RestController
 @ExposesResourceFor(NoteBook.class)
-@RequestMapping("/api/stocks")
+@RequestMapping("/api/notebooks")
 public class NoteBookController {
 
     @Autowired
@@ -36,8 +36,8 @@ public class NoteBookController {
     private NoteBookService noteBookService;
 
 
-    // GET /api/stocks (get a list of stocks)
-    @Operation(summary = "Get list of stocks (Ordered by Id in ascending order), you must specify page number and page size")
+    // GET /api/notebooks (get a list of notebooks)
+    @Operation(summary = "Get list of notebooks (Ordered by Id in ascending order), you must specify page number and page size")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful Operation",
                     content = { @Content(mediaType = "application/json") }),
@@ -46,18 +46,18 @@ public class NoteBookController {
             @ApiResponse(responseCode = "500", description = "Internal Error",
                     content = @Content)})
     @GetMapping(produces = { "application/json" })
-    public ResponseEntity<CollectionModel<NoteBook>> getStocks(@Parameter(description = "Page index (start from 0)") @RequestParam(value = "page") Integer page, @Parameter(description = "Number of records per page") @RequestParam(value = "pageSize") Integer pageSize) {
+    public ResponseEntity<CollectionModel<NoteBook>> getnotebooks(@Parameter(description = "Page index (start from 0)") @RequestParam(value = "page") Integer page, @Parameter(description = "Number of records per page") @RequestParam(value = "pageSize") Integer pageSize) {
 
-        // Retrieve requested portion of stocks from database
-        List<NoteBook> stockList = noteBookService.listStocks(page,pageSize);
+        // Retrieve requested portion of notebooks from database
+        List<NoteBook> notebookList = noteBookService.listnotebooks(page,pageSize);
 
         // Add self Link to each record as url for retrieving the record
-        for (NoteBook stock : stockList) {
+        for (NoteBook notebook : notebookList) {
             Link recordSelfLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(NoteBookController.class)
-                    .getStockById(stock.getID())).withSelfRel();
-            stock.add(recordSelfLink);
+                    .getnotebookById(notebook.getID())).withSelfRel();
+            notebook.add(recordSelfLink);
         }
-        CollectionModel<NoteBook> resources = CollectionModel.of(stockList);
+        CollectionModel<NoteBook> resources = CollectionModel.of(notebookList);
         // selfLink to api according to HATEOS
         Link selfLink = entityLinks.linkToCollectionResource(NoteBook.class);
         resources.add(selfLink);
@@ -67,126 +67,126 @@ public class NoteBookController {
     }
 
 
-    //GET /api/stocks/1 (get one stock from the list)
-    @Operation(summary = "Get a stock by its id")
+    //GET /api/notebooks/1 (get one notebook from the list)
+    @Operation(summary = "Get a notebook by its id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Found the stock",
+            @ApiResponse(responseCode = "200", description = "Found the notebook",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = NoteBook.class)) }),
             @ApiResponse(responseCode = "400", description = "Invalid id supplied",
                     content = @Content),
-            @ApiResponse(responseCode = "404", description = "Stock not found",
+            @ApiResponse(responseCode = "404", description = "notebook not found",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error",
                     content = @Content) })
-    @GetMapping(value = "/{stockId}", produces = { "application/json" })
-    public ResponseEntity<EntityModel<NoteBook>> getStockById(@Parameter(description = "id of stock to be retrieved")  @PathVariable int stockId){
+    @GetMapping(value = "/{notebookId}", produces = { "application/json" })
+    public ResponseEntity<EntityModel<NoteBook>> getnotebookById(@Parameter(description = "id of notebook to be retrieved")  @PathVariable int notebookId){
 
         // selfLink to api according to HATEOS
-        Link selfLink = entityLinks.linkToItemResource(NoteBook.class, stockId);
-        // Retrieve requested stock from database
-        NoteBook stock = noteBookService.getStockById(stockId);
-        //Check whether the stock exist or not
-        if(stock!=null) {
-            EntityModel<NoteBook> resource = EntityModel.of(stock);
+        Link selfLink = entityLinks.linkToItemResource(NoteBook.class, notebookId);
+        // Retrieve requested notebook from database
+        NoteBook notebook = noteBookService.getnotebookById(notebookId);
+        //Check whether the notebook exist or not
+        if(notebook!=null) {
+            EntityModel<NoteBook> resource = EntityModel.of(notebook);
             resource.add(selfLink);
             // Send data to client as a response
             return new ResponseEntity(EntityModel.of(resource),HttpStatus.OK);
         }
 
-        // If no stock is found send 404 status code as response
+        // If no notebook is found send 404 status code as response
         return new ResponseEntity(null, HttpStatus.NOT_FOUND);
     }
 
 
-    // POST /api/stocks (create a stock)
-    @Operation(summary = "Create a new stock")
+    // POST /api/notebooks (create a notebook)
+    @Operation(summary = "Create a new notebook")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Stock created",
+            @ApiResponse(responseCode = "201", description = "notebook created",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = NoteBook.class)) }),
             @ApiResponse(responseCode = "400", description = "Invalid id supplied",
                     content = @Content),
-            @ApiResponse(responseCode = "404", description = "Stock not found",
+            @ApiResponse(responseCode = "404", description = "notebook not found",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error",
                     content = @Content),
-            @ApiResponse(responseCode = "409", description = "Duplicate stock name",
+            @ApiResponse(responseCode = "409", description = "Duplicate notebook name",
                     content = @Content) })
     @PostMapping
-    public ResponseEntity<EntityModel<NoteBook>> createStock(@RequestBody NoteBook stock){
+    public ResponseEntity<EntityModel<NoteBook>> createnotebook(@RequestBody NoteBook notebook){
 
-        // Create and Save stock in database
-        NoteBook storedStock = noteBookService.createStock(stock);
+        // Create and Save notebook in database
+        NoteBook storednotebook = noteBookService.createnotebook(notebook);
 
-        // Check whether the stock is saved or not
-        if(stock!=null) {
-            // selfLink to api that retrieves the stock according to HATEOS
+        // Check whether the notebook is saved or not
+        if(notebook!=null) {
+            // selfLink to api that retrieves the notebook according to HATEOS
             Link recordSelfLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(NoteBookController.class)
-                    .getStockById(stock.getID())).withSelfRel();
-            stock.add(recordSelfLink);
-            // Send created stock with 201 status code to client
-            return new ResponseEntity(EntityModel.of(storedStock), HttpStatus.CREATED);
+                    .getnotebookById(notebook.getID())).withSelfRel();
+            notebook.add(recordSelfLink);
+            // Send created notebook with 201 status code to client
+            return new ResponseEntity(EntityModel.of(storednotebook), HttpStatus.CREATED);
         }
-        // If no stock is saved send 304 status code
+        // If no notebook is saved send 304 status code
         return new ResponseEntity(null, HttpStatus.NOT_MODIFIED);
     }
 
 
-    //PATCH /api/stocks/1 (update the price of a single stock)
-    @Operation(summary = "Update a stock by its id")
+    //PATCH /api/notebooks/1 (update the price of a single notebook)
+    @Operation(summary = "Update a notebook by its id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "202", description = "Stock updated",
+            @ApiResponse(responseCode = "202", description = "notebook updated",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = NoteBook.class)) }),
             @ApiResponse(responseCode = "400", description = "Invalid id supplied",
                     content = @Content),
-            @ApiResponse(responseCode = "404", description = "Stock not found",
+            @ApiResponse(responseCode = "404", description = "notebook not found",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error",
                     content = @Content),
-            @ApiResponse(responseCode = "409", description = "Duplicate stock name",
+            @ApiResponse(responseCode = "409", description = "Duplicate notebook name",
                     content = @Content) })
-    @PatchMapping(value = "/{stockId}", produces = { "application/json" })
-    public ResponseEntity<EntityModel<NoteBook>> updateStock(@Parameter(description = "id of stock to be updated")  @PathVariable int stockId, @Parameter(description = "stock updated information")  @RequestBody NoteBook stock){
+    @PatchMapping(value = "/{notebookId}", produces = { "application/json" })
+    public ResponseEntity<EntityModel<NoteBook>> updatenotebook(@Parameter(description = "id of notebook to be updated")  @PathVariable int notebookId, @Parameter(description = "notebook updated information")  @RequestBody NoteBook notebook){
 
-        // Update stock in the database
-        NoteBook storedStock = noteBookService.updateStock(stockId,stock);
+        // Update notebook in the database
+        NoteBook storednotebook = noteBookService.updatenotebook(notebookId,notebook);
 
-        // Check whether the stock exist and is updated or not
-        if(storedStock!=null) {
-            // selfLink to api that retrieves the stock according to HATEOS
+        // Check whether the notebook exist and is updated or not
+        if(storednotebook!=null) {
+            // selfLink to api that retrieves the notebook according to HATEOS
             Link recordSelfLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(NoteBookController.class)
-                    .getStockById(stock.getID())).withSelfRel();
-            stock.add(recordSelfLink);
-            // Send updated stock with 202 status code to client
-            return new ResponseEntity(EntityModel.of(storedStock), HttpStatus.ACCEPTED);
+                    .getnotebookById(notebook.getID())).withSelfRel();
+            notebook.add(recordSelfLink);
+            // Send updated notebook with 202 status code to client
+            return new ResponseEntity(EntityModel.of(storednotebook), HttpStatus.ACCEPTED);
         }
 
-        // If no stock is found send 404 status code as response
+        // If no notebook is found send 404 status code as response
         return new ResponseEntity(null, HttpStatus.NOT_FOUND);
     }
 
-    // DELETE/api/stocks/1 (delete a single stock)
-    @Operation(summary = "Delete a stock by its id")
+    // DELETE/api/notebooks/1 (delete a single notebook)
+    @Operation(summary = "Delete a notebook by its id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "202", description = "Stock deleted",
+            @ApiResponse(responseCode = "202", description = "notebook deleted",
                     content = @Content),
             @ApiResponse(responseCode = "400", description = "Invalid id supplied",
                     content = @Content),
-            @ApiResponse(responseCode = "404", description = "Stock not found",
+            @ApiResponse(responseCode = "404", description = "notebook not found",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error",
                     content = @Content) })
-    @DeleteMapping(value = "/{stockId}")
-    public ResponseEntity<EntityModel<NoteBook>> deleteStock(@Parameter(description = "id of stock to be deleted")  @PathVariable int stockId){
+    @DeleteMapping(value = "/{notebookId}")
+    public ResponseEntity<EntityModel<NoteBook>> deletenotebook(@Parameter(description = "id of notebook to be deleted")  @PathVariable int notebookId){
 
-        // Delete the stock by its Id and check for the result
-        if(noteBookService.deleteStock(stockId))
+        // Delete the notebook by its Id and check for the result
+        if(noteBookService.deletenotebook(notebookId))
             // Sent empty response with 202 status code
             return new ResponseEntity(null, HttpStatus.ACCEPTED);
         else
-            // If no stock is found send 404 status code as response
+            // If no notebook is found send 404 status code as response
             return new ResponseEntity(null, HttpStatus.NOT_FOUND);
     }
 

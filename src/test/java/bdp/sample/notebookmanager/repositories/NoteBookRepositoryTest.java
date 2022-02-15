@@ -34,65 +34,65 @@ class NoteBookRepositoryTest {
     {
         // Insert sample records in temporary database
         noteBookRepository.deleteAllInBatch();
-        NoteBook stock1 = new NoteBook(1,"Asus Vivo Book S",211.9);
-        NoteBook stock2 = new NoteBook(2,"HP Inspiron",299.9);
-        NoteBook stock3 = new NoteBook(3,"Dell B3",399.9);
-        NoteBook stock4 = new NoteBook(4,"Asus Smart Book",400);
-        NoteBook stock5 = new NoteBook(5,"Acer Logic",199.9);
-        noteBookRepository.save(stock1);
-        noteBookRepository.save(stock2);
-        noteBookRepository.save(stock3);
-        noteBookRepository.save(stock4);
-        noteBookRepository.save(stock5);
+        NoteBook notebook1 = new NoteBook(1,"Asus Vivo Book S",211.9);
+        NoteBook notebook2 = new NoteBook(2,"HP Inspiron",299.9);
+        NoteBook notebook3 = new NoteBook(3,"Dell B3",399.9);
+        NoteBook notebook4 = new NoteBook(4,"Asus Smart Book",400);
+        NoteBook notebook5 = new NoteBook(5,"Acer Logic",199.9);
+        noteBookRepository.save(notebook1);
+        noteBookRepository.save(notebook2);
+        noteBookRepository.save(notebook3);
+        noteBookRepository.save(notebook4);
+        noteBookRepository.save(notebook5);
     }
 
 
     @Test
     void findAllWithSpecifPageNumberAndPageSize() {
-        List<NoteBook> listStocks = noteBookRepository.findAll(PageRequest.of(0, 2, Sort.by("ID").ascending())).toList();
-        assertEquals(listStocks.size(), 2,"FindAll didn't retrieved correct number of records");
-        assertEquals(listStocks.get(0).getID(), 1,"FindAll didn't retrieved correct records");
-        assertEquals(listStocks.get(1).getID(), 2,"FindAll didn't retrieved correct records");
+        List<NoteBook> listnotebooks = noteBookRepository.findAll(PageRequest.of(0, 2, Sort.by("ID").ascending())).toList();
+        assertEquals(listnotebooks.size(), 2,"FindAll didn't retrieved correct number of records");
+        assertEquals(listnotebooks.get(0).getID(), 1,"FindAll didn't retrieved correct records");
+        assertEquals(listnotebooks.get(1).getID(), 2,"FindAll didn't retrieved correct records");
 
     }
 
     @Test
-    public void findOneStockById() {
+    public void findOnenotebookById() {
 
 
-        Optional<NoteBook> stock = noteBookRepository.findById(3);
-        assertEquals(true, stock.isPresent(),"FindOne stock didn't work");
-        assertEquals("Dell B3", stock.get().getName(),"FindOne stock didn't work");
+        Optional<NoteBook> notebook = noteBookRepository.findById(3);
+        assertEquals(true, notebook.isPresent(),"FindOne notebook didn't work");
+        assertEquals("Dell B3", notebook.get().getName(),"FindOne notebook didn't work");
     }
 
     @Test
-    public void saveNewStock() {
-        NoteBook stock = new NoteBook(6,"LG Noteook",299.9);
-        noteBookRepository.save(stock);
+    public void saveNewnotebook() {
+        NoteBook notebook = new NoteBook(6,"LG Noteook",299.9);
+        noteBookRepository.save(notebook);
 
-        Optional<NoteBook> stock2 = noteBookRepository.findById(6);
-        assertEquals(true, stock2.isPresent(),"Save new stock didn't work");
-        assertEquals("LG Noteook", stock2.get().getName(),"Save new stock didn't work");
+        Optional<NoteBook> notebook2 = noteBookRepository.findById(6);
+        assertEquals(true, notebook2.isPresent(),"Save new notebook didn't work");
+        assertEquals("LG Noteook", notebook2.get().getName(),"Save new notebook didn't work");
     }
 
     @Test
-    public void updateStock() {
+    public void updatenotebook() {
 
-        NoteBook stock = new NoteBook(2,"LG Noteook",399.9);
-        NoteBook stock2 = noteBookRepository.save(stock);
+        NoteBook notebook = new NoteBook(2,"LG Noteook",399.9);
+        NoteBook notebook2 = noteBookRepository.save(notebook);
 
-        assertNotEquals(null, stock2,"updateStock stock didn't work");
-        assertEquals("LG Noteook", stock2.getName(),"updateStock  didn't work (Name is not set)");
-        assertEquals(399.9, stock2.getCurrentPrice(),"updateStock  didn't work (CurrentPrice is not set)");
+        assertNotEquals(null, notebook2,"updatenotebook notebook didn't work");
+        assertEquals("LG Noteook", notebook2.getName(),"updatenotebook  didn't work (Name is not set)");
+        assertEquals(399.9, notebook2.getCurrentPrice(),"updatenotebook  didn't work (CurrentPrice is not set)");
 
     }
 
     @Test
-    public void deleteStock() {
+    public void deletenotebook() {
 
-        NoteBook stock = noteBookRepository.getById(4);
+        NoteBook notebook = noteBookRepository.getById(4);
 
-        noteBookRepository.delete(stock);
+        noteBookRepository.delete(notebook);
         assertThrows(JpaObjectRetrievalFailureException.class, () -> {
             noteBookRepository.getById(4);},"Delete record didn't work");
     }

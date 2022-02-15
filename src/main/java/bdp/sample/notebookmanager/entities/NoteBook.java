@@ -75,8 +75,8 @@ public class NoteBook extends RepresentationModel<NoteBook> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        NoteBook stock = (NoteBook) o;
-        return ID == stock.ID && currentPrice == stock.currentPrice && Objects.equals(name, stock.name) && Objects.equals(lastUpdate, stock.lastUpdate);
+        NoteBook notebook = (NoteBook) o;
+        return ID == notebook.ID && currentPrice == notebook.currentPrice && Objects.equals(name, notebook.name) && Objects.equals(lastUpdate, notebook.lastUpdate);
     }
 
     @Override
