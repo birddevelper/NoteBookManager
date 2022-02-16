@@ -1,6 +1,5 @@
 package bdp.sample.notebookmanager.service;
 
-import bdp.sample.notebookmanager.configs.JpaConfig;
 import bdp.sample.notebookmanager.repositories.NoteBookRepository;
 import bdp.sample.notebookmanager.services.NoteBookService;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 import bdp.sample.notebookmanager.entities.NoteBook;
 
@@ -21,9 +20,10 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
-@ContextConfiguration(
-        classes = { JpaConfig.class },
-        loader = AnnotationConfigContextLoader.class)
+/*classes = { JpaConfig.class },*/
+
+@ContextConfiguration(loader = AnnotationConfigWebContextLoader.class)
+
 @Transactional
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class NoteBookServiceTest {
@@ -84,9 +84,9 @@ public class NoteBookServiceTest {
     {
 
         List<NoteBook> notebookList = noteBookService.listnotebooks(0,3);
-        assertEquals(notebookList.size(), 3,"listnotebooks didn't retrieved correct number of records");
-        assertEquals(notebookList.get(0).getID(), 1,"listnotebooks didn't retrieved correct records");
-        assertEquals(notebookList.get(2).getID(), 3,"listnotebooks didn't retrieved correct records");
+        assertEquals(3, notebookList.size(), "listnotebooks didn't retrieved correct number of records");
+        assertEquals(1, notebookList.get(0).getID(), "listnotebooks didn't retrieved correct records");
+        assertEquals(3, notebookList.get(2).getID(), "listnotebooks didn't retrieved correct records");
 
     }
 

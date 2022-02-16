@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
-public class NoteBook extends RepresentationModel<NoteBook> {
+public class NoteBook extends RepresentationModel {
     private Integer ID;
     private String name;
     private double currentPrice;

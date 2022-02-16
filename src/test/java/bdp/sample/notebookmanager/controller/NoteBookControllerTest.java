@@ -1,6 +1,5 @@
 package bdp.sample.notebookmanager.controller;
 
-import bdp.sample.notebookmanager.configs.JpaConfig;
 import bdp.sample.notebookmanager.entities.NoteBook;
 import bdp.sample.notebookmanager.repositories.NoteBookRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,28 +9,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.annotation.Resource;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-@SpringBootTest
-@ActiveProfiles("test")
+/*
 //@WebAppConfiguration() //"file:src/test/resources"
 @ContextConfiguration( classes = { JpaConfig.class }) // loader = AnnotationConfigWebContextLoader.class,
+@ActiveProfiles("test")
+*/
+
+@SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @AutoConfigureMockMvc
 @AutoConfigureWebClient
 class NoteBookControllerTest {
-
 
 
    @Autowired

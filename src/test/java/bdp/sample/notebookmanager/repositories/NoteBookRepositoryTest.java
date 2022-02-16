@@ -1,6 +1,5 @@
 package bdp.sample.notebookmanager.repositories;
 
-import bdp.sample.notebookmanager.configs.JpaConfig;
 import bdp.sample.notebookmanager.entities.NoteBook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,7 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -20,9 +19,14 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
+/*
 @ContextConfiguration(
         classes = { JpaConfig.class },
         loader = AnnotationConfigContextLoader.class)
+*/
+/*classes = { JpaConfig.class },*/
+
+@ContextConfiguration(loader = AnnotationConfigWebContextLoader.class)
 @Transactional
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class NoteBookRepositoryTest {
