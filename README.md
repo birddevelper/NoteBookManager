@@ -1,7 +1,7 @@
 
 ## NoteBook Manager
 
-NoteBook Manager is a tiny application that performs CRUD jobs on Stock Entity via Rest Webservices.
+NoteBook Manager is a tiny application that performs CRUD jobs on Notebook Entity via Rest Webservices.
 It exposes 5 endpoint as following list :
 
 - GET /api/notebooks (get a list of stocks)
