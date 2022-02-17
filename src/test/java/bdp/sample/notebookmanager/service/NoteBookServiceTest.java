@@ -4,6 +4,7 @@ import bdp.sample.notebookmanager.repositories.NoteBookRepository;
 import bdp.sample.notebookmanager.services.NoteBookService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.test.annotation.DirtiesContext;
@@ -20,16 +21,14 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
-/*classes = { JpaConfig.class },*/
-
-@ContextConfiguration(loader = AnnotationConfigWebContextLoader.class)
-
+@ContextConfiguration(loader = AnnotationConfigWebContextLoader.class)/*classes = { JpaConfig.class },*/
 @Transactional
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class NoteBookServiceTest {
 
     @Resource
     private NoteBookRepository noteBookRepository;
+
     @Resource
     private NoteBookService noteBookService;
 

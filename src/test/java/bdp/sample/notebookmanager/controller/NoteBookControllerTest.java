@@ -14,16 +14,20 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.annotation.Resource;
+import javax.sql.DataSource;
+
+import java.sql.SQLException;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 /*
 //@WebAppConfiguration() //"file:src/test/resources"
 @ContextConfiguration( classes = { JpaConfig.class }) // loader = AnnotationConfigWebContextLoader.class,
-@ActiveProfiles("test")
+
 */
 
 @SpringBootTest
+@ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @AutoConfigureMockMvc
 @AutoConfigureWebClient
@@ -33,7 +37,8 @@ class NoteBookControllerTest {
    @Autowired
    MockMvc mockMvc;
 
-
+    @Autowired
+    DataSource dataSource;
 
     @Resource
     private NoteBookRepository noteBookRepository;
@@ -41,10 +46,8 @@ class NoteBookControllerTest {
 
 
     @BeforeEach
-    public void setup()
-    {
-
-
+    public void setup() throws SQLException {
+        System.out.println(dataSource.getConnection().getCatalog());
         NoteBook notebook1 = new NoteBook(1,"Asus Vivo Book S",211.9);
         NoteBook notebook2 = new NoteBook(2,"HP Inspiron",299.9);
         NoteBook notebook3 = new NoteBook(3,"Dell B3",399.9);

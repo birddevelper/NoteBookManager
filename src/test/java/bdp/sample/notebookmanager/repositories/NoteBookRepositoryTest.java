@@ -3,6 +3,7 @@ package bdp.sample.notebookmanager.repositories;
 import bdp.sample.notebookmanager.entities.NoteBook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -18,15 +19,15 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-@SpringBootTest
+//@SpringBootTest
 /*
 @ContextConfiguration(
         classes = { JpaConfig.class },
         loader = AnnotationConfigContextLoader.class)
 */
 /*classes = { JpaConfig.class },*/
-
-@ContextConfiguration(loader = AnnotationConfigWebContextLoader.class)
+//@ContextConfiguration(loader = AnnotationConfigWebContextLoader.class)
+@DataJpaTest
 @Transactional
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class NoteBookRepositoryTest {

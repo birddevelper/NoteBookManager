@@ -7,9 +7,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import bdp.sample.notebookmanager.entities.NoteBook;
 import bdp.sample.notebookmanager.repositories.NoteBookRepository;
+import org.springframework.context.annotation.Profile;
 
 
 @Configuration
+@Profile("!test")
 class InitiateDatabaseRecords  {
 
     private static final Logger log = LoggerFactory.getLogger(InitiateDatabaseRecords.class);
