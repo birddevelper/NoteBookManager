@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,27 +30,14 @@ import static org.junit.jupiter.api.Assertions.*;
 //@ContextConfiguration(loader = AnnotationConfigWebContextLoader.class)
 @DataJpaTest
 @Transactional
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:beforeTestRun.sql")
+@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:afterTestRun.sql")
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class NoteBookRepositoryTest {
     @Resource
     private NoteBookRepository noteBookRepository;
 
-    @BeforeEach
-    public void init()
-    {
-        // Insert sample records in temporary database
-        noteBookRepository.deleteAllInBatch();
-        NoteBook notebook1 = new NoteBook(1,"Asus Vivo Book S",211.9);
-        NoteBook notebook2 = new NoteBook(2,"HP Inspiron",299.9);
-        NoteBook notebook3 = new NoteBook(3,"Dell B3",399.9);
-        NoteBook notebook4 = new NoteBook(4,"Asus Smart Book",400);
-        NoteBook notebook5 = new NoteBook(5,"Acer Logic",199.9);
-        noteBookRepository.save(notebook1);
-        noteBookRepository.save(notebook2);
-        noteBookRepository.save(notebook3);
-        noteBookRepository.save(notebook4);
-        noteBookRepository.save(notebook5);
-    }
+
 
 
     @Test
@@ -67,7 +55,7 @@ class NoteBookRepositoryTest {
 
         Optional<NoteBook> notebook = noteBookRepository.findById(3);
         assertEquals(true, notebook.isPresent(),"FindOne notebook didn't work");
-        assertEquals("Dell B3", notebook.get().getName(),"FindOne notebook didn't work");
+        assertEquals("Dell Magic", notebook.get().getName(),"FindOne notebook didn't work");
     }
 
     @Test
@@ -95,10 +83,10 @@ class NoteBookRepositoryTest {
     @Test
     public void deletenotebook() {
 
-        NoteBook notebook = noteBookRepository.getById(4);
+        noteBookRepository.deleteById(4);
 
-        noteBookRepository.delete(notebook);
-        assertThrows(JpaObjectRetrievalFailureException.class, () -> {
-            noteBookRepository.getById(4);},"Delete record didn't work");
+        assertFalse(noteBookRepository.existsById(4),"Delete record didn't work");
+
+
     }
 }

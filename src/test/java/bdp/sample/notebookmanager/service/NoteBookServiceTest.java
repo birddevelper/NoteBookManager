@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 import bdp.sample.notebookmanager.entities.NoteBook;
@@ -23,7 +24,9 @@ import static org.mockito.ArgumentMatchers.any;
 @SpringBootTest
 @ContextConfiguration(loader = AnnotationConfigWebContextLoader.class)/*classes = { JpaConfig.class },*/
 @Transactional
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:beforeTestRun.sql")
+@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:afterTestRun.sql")
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class NoteBookServiceTest {
 
     @Resource
@@ -33,22 +36,6 @@ public class NoteBookServiceTest {
     private NoteBookService noteBookService;
 
 
-    @BeforeEach
-    public void init()
-    {
-        // Insert sample records in temporary database
-        noteBookRepository.deleteAllInBatch();
-        NoteBook notebook1 = new NoteBook(1,"Asus Vivo Book S",211.9);
-        NoteBook notebook2 = new NoteBook(2,"HP Inspiron",299.9);
-        NoteBook notebook3 = new NoteBook(3,"Dell B3",399.9);
-        NoteBook notebook4 = new NoteBook(4,"Asus Smart Book",400);
-        NoteBook notebook5 = new NoteBook(5,"Acer Logic",199.9);
-        noteBookRepository.save(notebook1);
-        noteBookRepository.save(notebook2);
-        noteBookRepository.save(notebook3);
-        noteBookRepository.save(notebook4);
-        noteBookRepository.save(notebook5);
-    }
 
 
 
@@ -90,23 +77,24 @@ public class NoteBookServiceTest {
     }
 
     @Test
-    public void updatenotebook() {
-        NoteBook notebook = new NoteBook(2,"LG Noteook",399.9);
+    public void updateNoteBook() {
+        NoteBook notebook = new NoteBook(2,"LG NoteBook",399.9);
         NoteBook notebook2 = noteBookService.updatenotebook(2,notebook);
 
-        assertNotEquals(null, notebook2,"updatenotebook notebook didn't work");
-        assertEquals("LG Noteook", notebook2.getName(),"updatenotebook  didn't work (Name is not set)");
-        assertEquals(399.9, notebook2.getCurrentPrice(),"updatenotebook  didn't work (CurrentPrice is not set)");
+        assertNotEquals(null, notebook2,"updateNoteBook notebook didn't work");
+        assertEquals("LG NoteBook", notebook2.getName(),"updateNoteBook  didn't work (Name is not set)");
+        assertEquals(399.9, notebook2.getCurrentPrice(),"updateNoteBook  didn't work (CurrentPrice is not set)");
     }
 
     @Test
-    public void deletenotebook() {
+    public void deleteNoteBook() {
 
         Boolean notebookDeleted = noteBookService.deletenotebook(4);
 
         assertEquals(true, notebookDeleted,"deletenotebook  didn't work ");
+
         assertThrows(JpaObjectRetrievalFailureException.class, () -> {
-            noteBookRepository.getById(4);},"deletenotebook didn't work");
+            noteBookRepository.getById(4);},"deleteNoteBook didn't work");
     }
 
 

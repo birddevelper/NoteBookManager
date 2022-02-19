@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.annotation.Resource;
@@ -28,37 +29,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @ActiveProfiles("test")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @AutoConfigureMockMvc
 @AutoConfigureWebClient
+@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:beforeTestRun.sql")
+@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:afterTestRun.sql")
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class NoteBookControllerTest {
 
 
-   @Autowired
-   MockMvc mockMvc;
+    @Autowired
+    MockMvc mockMvc;
 
     @Autowired
     DataSource dataSource;
 
-    @Resource
-    private NoteBookRepository noteBookRepository;
 
 
 
-    @BeforeEach
-    public void setup() throws SQLException {
-        System.out.println(dataSource.getConnection().getCatalog());
-        NoteBook notebook1 = new NoteBook(1,"Asus Vivo Book S",211.9);
-        NoteBook notebook2 = new NoteBook(2,"HP Inspiron",299.9);
-        NoteBook notebook3 = new NoteBook(3,"Dell B3",399.9);
-        NoteBook notebook4 = new NoteBook(4,"Asus Smart Book",400);
-        NoteBook notebook5 = new NoteBook(5,"Acer Logic",199.9);
-        noteBookRepository.save(notebook1);
-        noteBookRepository.save(notebook2);
-        noteBookRepository.save(notebook3);
-        noteBookRepository.save(notebook4);
-        noteBookRepository.save(notebook5);
-    }
 
     @Test
     void getListOfnotebooksWithConfigurablePageSize() throws Exception {
@@ -153,7 +140,7 @@ class NoteBookControllerTest {
     }
 
     @Test
-    void createnotebookWithDuplicateName() throws Exception{
+    void createNoteBookWithDuplicateName() throws Exception{
 
         NoteBook notebook = new NoteBook("Dell B3",305.99);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -167,7 +154,7 @@ class NoteBookControllerTest {
     }
 
     @Test
-    void deletenotebookWithExistingnotebookId() throws Exception{
+    void deleteNoteBookWithExistingNoteBookId() throws Exception{
 
         // Delete notebook with id = 2
         mockMvc.perform(delete("/api/notebooks/2"))
