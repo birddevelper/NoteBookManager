@@ -16,21 +16,21 @@ services:
           retries: 10
 
     
-    # service 2: Stock Manager app image creation
-    stockservice:
-      image: stock-service
-      container_name: stock-service-app     # name of container created from image
+    # service 2: notebook Manager app image creation
+    notebookservice:
+      image: notebook-service
+      container_name: notebook-service-app     # name of container created from image
       build:
         context: .                          # path to docker file
         dockerfile: Dockerfile              # docker file name
       ports:
-        - "8090:8080"                       # stock service port
+        - "8090:8080"                       # notebook service port
       restart: always
 
       depends_on:                           #define dependencies of this app
          db :                              #dependency name (which is defined with this name 'db' in this file earlier)
            condition: service_healthy
       environment:
-        SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/stock_manager?createDatabaseIfNotExist=true&useSSL=false
+        SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/notebook_manager?createDatabaseIfNotExist=true&useSSL=false
         SPRING_DATASOURCE_USERNAME: root
         SPRING_DATASOURCE_PASSWORD: spring
