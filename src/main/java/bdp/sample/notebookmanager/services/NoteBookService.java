@@ -17,7 +17,7 @@ import java.util.Optional;
 public class NoteBookService {
 
     @Autowired
-    NoteBookRepository noteBookRepository;
+    private NoteBookRepository noteBookRepository;
 
     //This method gets page index and page size and returns records from database accordingly
     public List<NoteBook> listnotebooks(int page, int size){
